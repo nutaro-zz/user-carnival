@@ -9,6 +9,12 @@
       "email": "nutaro@protonmail.com"
     }
   ],
+  "type": "project1",
+  "autoload": {
+    "psr-4": {
+      "Api\\": "Api/"
+    }
+  },
   "require": {
     "phpunit/phpunit": "=9-9.5.2"
   }
