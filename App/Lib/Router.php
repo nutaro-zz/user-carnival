@@ -1,4 +1,4 @@
-<?php namespace Api\Lib;
+<?php namespace App\Lib;
 
 class Router
 {

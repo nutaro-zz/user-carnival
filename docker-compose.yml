@@ -1,9 +1,23 @@
 version: "3.9"
 services:
-  api:
-    container_name: "api"
-    build: .
+  apache:
+    container_name: php
+    restart: always
+    build: ./
+    networks:
+      users:
+        ipv4_address: 172.16.239.10
     ports:
-      - "8000:8000"
+      - "80:80"
+      - "443:443"
     volumes:
-    - ./:/opt/app
+      - "./www:/var/www/html"
+
+networks:
+  users:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.239.0/24
+          gateway: 172.16.239.1

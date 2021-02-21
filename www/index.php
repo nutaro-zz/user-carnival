@@ -10,7 +10,7 @@ Router::get('/', function (Request $req, Response $res) {
 });
 
 
-Router::get('/users/([0-9])', function (Request $req, Response $res) {
+Router::get('/user/([0-9])', function (Request $req, Response $res) {
     $res->toJSON([
         'post' =>  ['id' => $req->params[0]],
         'status' => 'ok'
