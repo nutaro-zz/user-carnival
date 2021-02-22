@@ -23,6 +23,24 @@ class Router
         self::on($route, $callback);
     }
 
+    public static function put($route, $callback)
+    {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') !== 0) {
+            return;
+        }
+
+        self::on($route, $callback);
+    }
+
+    public static function delete($route, $callback)
+    {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') !== 0) {
+            return;
+        }
+
+        self::on($route, $callback);
+    }
+
     public static function on($regex, $cb)
     {
         $params = $_SERVER['REQUEST_URI'];
