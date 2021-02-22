@@ -2,19 +2,21 @@ version: "3.9"
 services:
   apache:
     container_name: php
-    restart: always
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www
+    command: "bash -c 'composer install && service apache2 restart && tail -f /dev/null'"
     networks:
-      users:
+      usersapi:
         ipv4_address: 172.16.239.10
-    ports:
-      - "80:80"
-      - "443:443"
     volumes:
-      - "./www:/var/www/html"
+      - .:/var/www/
+      - ./src/html:/var/www/html
+      - ./apache2.conf:/etc/apache2/sites-enabled/users.conf
 
 networks:
-  users:
+  usersapi:
     driver: bridge
     ipam:
       driver: default

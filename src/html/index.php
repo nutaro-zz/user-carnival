@@ -1,5 +1,5 @@
 <?php
-require '/opt/user-api/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use App\Lib\Router;
 use App\Lib\Request;
@@ -7,14 +7,16 @@ use App\Lib\Response;
 
 Router::get('/', function (Request $req, Response $res) {
     $res->status(404);
-});
-
-
-Router::get('/user/([0-9])', function (Request $req, Response $res) {
     $res->toJSON([
-        'post' =>  ['id' => $req->params[0]],
-        'status' => 'ok'
+        "message" => "not found"
     ]);
 });
 
-App::run();
+
+Router::get('/user', function (Request $req, Response $res) {
+    $res->status(200);
+    $res->toJSON([
+        'post' =>  ['id' => "00000"],
+        'status' => 'ok'
+    ]);
+});
