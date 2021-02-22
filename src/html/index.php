@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+require '/opt/user-api/vendor/autoload.php';
 
 use App\Lib\Router;
 use App\Lib\Request;
