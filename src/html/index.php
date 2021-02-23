@@ -14,17 +14,17 @@ Router::get('/', function (Request $req, Response $res) {
     ]);
 });
 
+Router::get('/user/all', function (Request $req, Response $res) {
+    return UserController::getAll($req, $res);
+});
+
 
 Router::get('/user/([0-9]*)', function (Request $req, Response $res) {
     return UserController::get($req, $res);
 });
 
 Router::post('/user', function (Request $req, Response $res) {
-    $res->status(200);
-    $res->toJSON([
-        'post' =>  ['id' => "00000"],
-        'status' => 'ok'
-    ]);
+    return UserController::post($req, $res);
 });
 
 
