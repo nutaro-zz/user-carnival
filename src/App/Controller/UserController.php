@@ -6,15 +6,12 @@ namespace App\Controller;
 
 use App\Lib\Request;
 use App\Lib\Response;
-use App\DataBase\Connection
 
 class UserController
 {
 
     public static function get(Request $request, Response $response): Response
     {
-        $connection = Connection::getInstance();
-        connection->quer
         $response->status(200);
         $response->toJSON([
             "request" => $request->params[0],
