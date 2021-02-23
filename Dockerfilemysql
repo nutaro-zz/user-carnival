@@ -1,0 +1,6 @@
+FROM mysql:5.7
+
+COPY ./mysql.cnf /etc/mysql/mysql.cnf.d/mysqld.cnf
+COPY ./security.sql /security.sql
+CMD "mysql -u root -p"secret" < /security.sql"
+CMD "bash -c 'chown -R mysql:mysql'"

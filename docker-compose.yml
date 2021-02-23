@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file: apache.env
     working_dir: /var/www
     command: "bash -c 'composer install && service apache2 restart && tail -f /dev/null'"
     networks:
@@ -14,6 +15,23 @@ services:
       - .:/var/www/
       - ./src/html:/var/www/html
       - ./apache2.conf:/etc/apache2/sites-enabled/users.conf
+
+  mysql:
+    container_name: database
+    build:
+      context: .
+      dockerfile: Dockerfilemysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+#      - ./storage:/var/lib/mysql
+      - ./security.sql:/security.sql
+      - ./instruction.sql:/instruction.sql
+      - ./mysql.cnf:/etc/mysql/mysql.cnf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      usersapi:
+        ipv4_address: 172.16.239.11
 
 networks:
   usersapi:
