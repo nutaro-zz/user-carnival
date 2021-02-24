@@ -8,6 +8,7 @@ use App\Lib\Request;
 use App\Lib\Response;
 use App\DataBase\Connection;
 use App\Service\UserService;
+use App\Entities\User;
 
 
 class UserController
@@ -44,7 +45,10 @@ class UserController
                 return $response;
             }
         }
+        $user = new User();
+        $user->setName($content['name']);
         $service = new UserService();
+        $service->setEntity($user);
         $service->create($content);
         $response->status(201);
         $response->toJSON();
