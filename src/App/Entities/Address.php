@@ -7,17 +7,13 @@ namespace App\Entities;
 class Address implements IRegister
 {
 
-    private string $table;
+    private static string $table = 'address';
     public int $id;
     private string $street;
     private string $complement;
     private int $number;
     private State $state;
     private City $city;
-
-    public function __construct(){
-        $this->table = 'address';
-    }
 
     /**
      * @return int
@@ -112,17 +108,22 @@ class Address implements IRegister
 
     public function add(): void
     {
-        // TODO: Implement add() method.
+        $connection = Connection::getInstance();
+        $sql = "INSERT INTO {self::table} (street, number, complement, state_id, city_id)";
+        $sql .= " VALUES ('{$this->street}', '{$this->number}', '{$this->complement}'";
+        $sql .= ", '{$this->getState()->getId()}', '{$this->getCity()->getId()}')";
+        $connection->exec(sql);
+        $this->id = $connection->lastInsertId();
     }
 
     public function update(): void
     {
-        // TODO: Implement update() method.
+        return;
     }
 
     public function delete(): void
     {
-        // TODO: Implement delete() method.
+       return;
     }
 
     public static function getByField(array $values)

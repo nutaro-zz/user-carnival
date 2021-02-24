@@ -5,6 +5,9 @@
 namespace App\Service;
 
 
+use App\Entities\City;
+use App\Entities\State;
+
 class CityService extends Service implements IService
 {
 
@@ -14,31 +17,29 @@ class CityService extends Service implements IService
         $this->table = 'city';
     }
 
-    public function getOne(int $data)
+    public static function getOrCreateCity(array $data, State $state): City
     {
-        // TODO: Implement getOne() method.
-    }
-
-    public function getAll()
-    {
-        // TODO: Implement getAll() method.
+        try {
+            $city = City::getByField(array("state_id" => $state->getId(), "name" => $data['name']));
+            if (!empty($city))
+                return $city;
+            $city = new City();
+            $city->setState($state);
+            $city->setName($data['name']);
+            $city->add();
+            return $city;
+        } catch (\PDOException $ex) {
+            echo $ex->getMessage();
+        }
     }
 
     public function create(array $data)
     {
-        $sql = "INSERT INTO ".$this->table;
-        $sql .= " (name, state_id) VALUES ('";
-        $sql .= $data['name']."', '".$data['state_id']."')";
-        $this->connection->exec($sql);
+        // TODO: Implement create() method.
     }
 
-    public function update(array $data)
+    public function getById()
     {
-        // TODO: Implement update() method.
-    }
-
-    public function delete(int $id)
-    {
-        // TODO: Implement delete() method.
+        // TODO: Implement getById() method.
     }
 }

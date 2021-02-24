@@ -36,7 +36,7 @@ class UserController
 
     public static function post(Request $request, Response $response): Response
     {
-        $fields = ["name", "address", "city", "state"];
+        $fields = ["name", "street", "city", "state", "number"];
         $content = $request->getJSON();
         foreach ($fields as $field){
             if (!isset($content[$field])) {
@@ -46,7 +46,6 @@ class UserController
             }
         }
         $user = new User();
-        $user->setName($content['name']);
         $service = new UserService();
         $service->setEntity($user);
         $service->create($content);

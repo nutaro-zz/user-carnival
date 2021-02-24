@@ -4,6 +4,8 @@
 namespace App\Entities;
 
 
+use App\DataBase\Connection;
+
 class User implements IRegister
 {
     protected int $id;
@@ -53,7 +55,11 @@ class User implements IRegister
 
     public function add(): void
     {
-        // TODO: Implement add() method.
+        $connection = Connection::getInstance();
+        $sql = "INSERT INTO user (name, address_id) ";
+        $sql .= "VALUES ('{$this->name}', '{$this->getAddress()->getId()}')";
+        $connection->exec($sql);
+        $this->id = $connection->lastInsertId();
     }
 
     public function update(): void

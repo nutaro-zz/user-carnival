@@ -16,7 +16,8 @@ CREATE table IF NOT EXISTS city(
 CREATE table IF NOT EXISTS address(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     street VARCHAR(250) NOT NULL,
-    complement VARCHAR(50),
+    number INT NOT NULL,
+    complement VARCHAR(50) NULL,
     state_id int,
     city_id int,
     INDEX state_index (state_id),

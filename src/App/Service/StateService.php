@@ -4,6 +4,9 @@
 namespace App\Service;
 
 
+use App\Entities\State;
+
+
 class StateService extends Service implements IService
 {
 
@@ -13,31 +16,29 @@ class StateService extends Service implements IService
         $this->table = 'state';
     }
 
-    public function getOne(int $data)
+    public static function getOrCreateState(array $data): State
     {
-
-    }
-
-    public function getAll()
-    {
-        // TODO: Implement getAll() method.
+        try {
+            $state = State::getByField($data);
+            if (!empty($state))
+                return $state;
+            $state = new State();
+            $state->setName($data["name"]);
+            $state->add();
+            return $state;
+        } catch (\PDOException $ex) {
+            echo $ex->getMessage();
+        }
     }
 
     public function create(array $data)
     {
-        $sql = "INSERT INTO ".$this->table." (name) VALUES (:name)";
-        $query = $this->connection->prepare($sql);
-        $query->bindParam('name', $data['name']);
-        $query->execute();
+        // TODO: Implement create() method.
     }
 
-    public function update(array $data)
+    public function getById()
     {
-        // TODO: Implement update() method.
+        // TODO: Implement getById() method.
     }
 
-    public function delete(int $id)
-    {
-        // TODO: Implement delete() method.
-    }
 }
