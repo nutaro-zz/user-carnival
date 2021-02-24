@@ -20,18 +20,18 @@ class UserService extends Service implements IService
     {
             $stateId = $this->geStateId($data['state']);
             echo $stateId;
-//            $cityId = $this->getCityId(array("state_id" => $stateId, "name" => $data['city']));
-//            try {
-//                $this->connection->beginTransaction();
-//                $sql = "INSERT INTO ".$this->table;
-//                $sql .= " (name, address, state_id, city_id) VALUES ";
-//                $sql .= "(".$data['name'].", ".$data['address'].", ".$stateId.", ".$cityId.")";
-//                $this->connection->exec($sql);
-//                $this->connection->commit();
-//            } catch (\Exception $ex) {
-//                $this->connection->rollBack();
-//                echo $ex->getMessage();
-//            }
+            $cityId = $this->getCityId(array("state_id" => $stateId, "name" => $data['city']));
+            try {
+                $this->connection->beginTransaction();
+                $sql = "INSERT INTO ".$this->table;
+                $sql .= " (name, address, state_id, city_id) VALUES ";
+                $sql .= "(".$data['name'].", ".$data['address'].", ".$stateId.", ".$cityId.")";
+                $this->connection->exec($sql);
+                $this->connection->commit();
+            } catch (\Exception $ex) {
+                $this->connection->rollBack();
+                echo $ex->getMessage();
+            }
 
     }
 
@@ -56,11 +56,11 @@ class UserService extends Service implements IService
     private function geStateId(string $name): int
     {
         try {
+            $this->connection->beginTransaction();
             $stateService = New StateService();
             $state = $stateService->getByField(array('name' => $name));
             if (!empty($state))
-                return $state['id'];
-            $this->connection->beginTransaction();
+            return $state['id'];
             $stateService->create(array("name" => $name));
             $this->connection->commit();
             return $this->connection->lastInsertId();

@@ -10,7 +10,7 @@ class StateService extends Service implements IService
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'users';
+        $this->table = 'state';
     }
 
     public function getOne(int $data)
