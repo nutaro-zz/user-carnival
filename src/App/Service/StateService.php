@@ -15,7 +15,7 @@ class StateService extends Service implements IService
 
     public function getOne(int $data)
     {
-        // TODO: Implement getOne() method.
+
     }
 
     public function getAll()

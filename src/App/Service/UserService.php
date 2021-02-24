@@ -17,7 +17,6 @@ class UserService extends Service implements IService
 
     public function create(array $data)
     {
-        $this->connection->beginTransaction();
         $name = $data['name'];
         $address = $data['address'];
         $city = $data['city'];

@@ -6,5 +6,5 @@ namespace App\Service;
 
 interface IByField
 {
-    public function getByField(string $field, $value);
+    public function getByField(array $values);
 }
