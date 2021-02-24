@@ -26,7 +26,8 @@ class CityService extends Service implements IService
     public function create(array $data)
     {
         $sql = "INSERT INTO ".$this->table;
-        $sql .= " (name, state_id) VALUES (".$data['name'].", ".$data['state_id'].")";
+        $sql .= " (name, state_id) VALUES ('";
+        $sql .= $data['name']."', '".$data['state_id']."')";
         $this->connection->exec($sql);
     }
 

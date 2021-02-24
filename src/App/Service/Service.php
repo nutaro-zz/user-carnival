@@ -20,9 +20,10 @@ class Service implements IByField
     {
         $sql = "SELECT * FROM ".$this->table." WHERE ";
         foreach ($values as $key  => $value){
-            $sql .= $key."=".$value." AND";
+            $sql .= $key."='{$value}' AND ";
         }
-        $sql = preg_replace("( AND$)", ';', $sql);
+        $sql = rtrim($sql, " AND ");
+        $sql .= ";";
         $query = $this->connection->prepare($sql);
         $query->execute();
         return $query->fetchAll();
