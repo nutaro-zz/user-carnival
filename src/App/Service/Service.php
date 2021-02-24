@@ -25,7 +25,6 @@ class Service implements IByField
         }
         $sql = preg_replace(" AND$", '', $sql);
         $query = $this->connection->prepare($sql);
-        $query->bindParam('field', $value);
         $query->execute();
         return $query->fetch();
     }

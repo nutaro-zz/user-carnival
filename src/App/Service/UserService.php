@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\DataBase\Connection;
 use App\Service\CityService;
+use App\Service\StateService;
 
 class UserService extends Service implements IService
 {
@@ -19,9 +20,21 @@ class UserService extends Service implements IService
     {
         $name = $data['name'];
         $address = $data['address'];
-        $city = $data['city'];
-        $state = $this->geStateId(data['state']);
+        $stateId = $this->geStateId(data['state']);
+        $city_id = $this->getCityId(array("state_id" => $stateId, "name" => Sdata['city']));
+        $sql = "INSERT INTO ".$this->table."(name, address, state_id, city_id) VALUES (:name, :address, )";
+
+    }
+
+    private function getCityId(array $fields): int
+    {
         $cityService = new CityService();
+        $city = $cityService->getByField($fields);
+        if ($city)
+            return $city['id'];
+        $city = $cityService->create($fields);
+        return $city['id'];
+
     }
 
     private function geStateId(string $name)
