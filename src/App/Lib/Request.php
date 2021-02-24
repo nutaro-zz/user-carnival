@@ -15,9 +15,9 @@ class Request
         $this->contentType = !empty($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
     }
 
-    public function getJSON()
+    public function getJSON(): array
     {
-        if ($this->reqMethod !== 'POST' || $this->reqMethod !== 'PUT') {
+        if ($this->reqMethod !== 'POST' && $this->reqMethod !== 'PUT') {
             return [];
         }
 
@@ -25,10 +25,7 @@ class Request
             return [];
         }
 
-        // Receive the RAW post data.
         $content = trim(file_get_contents("php://input"));
-        $decoded = json_decode($content, true);
-
-        return $decoded;
+        return json_decode($content, true);
     }
 }

@@ -10,7 +10,7 @@ class StateService extends Service implements IService
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'user';
+        $this->table = 'users';
     }
 
     public function getOne(int $data)
@@ -27,9 +27,8 @@ class StateService extends Service implements IService
     {
         $sql = "INSERT INTO ".$this->table." (name) VALUES (:name)";
         $query = $this->connection->prepare($sql);
-        $query->bindParam(array('name'), $data['name']);
+        $query->bindParam('name', $data['name']);
         $query->execute();
-        return $query->fetch();
     }
 
     public function update(array $data)

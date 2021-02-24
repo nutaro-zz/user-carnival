@@ -14,7 +14,6 @@ class Service implements IByField
     public function __construct()
     {
         $this->connection = Connection::getInstance();
-        $this->connection->beginTransaction();
     }
 
     public function getByField(array $values)
@@ -23,9 +22,9 @@ class Service implements IByField
         foreach ($values as $key  => $value){
             $sql .= $key."=".$value." AND";
         }
-        $sql = preg_replace(" AND$", '', $sql);
+        $sql = preg_replace("( AND$)", ';', $sql);
         $query = $this->connection->prepare($sql);
         $query->execute();
-        return $query->fetch();
+        return $query->fetchAll();
     }
 }

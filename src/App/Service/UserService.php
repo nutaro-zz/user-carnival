@@ -13,38 +13,61 @@ class UserService extends Service implements IService
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'user';
+        $this->table = 'users';
     }
 
     public function create(array $data)
     {
-        $name = $data['name'];
-        $address = $data['address'];
-        $stateId = $this->geStateId(data['state']);
-        $city_id = $this->getCityId(array("state_id" => $stateId, "name" => Sdata['city']));
-        $sql = "INSERT INTO ".$this->table."(name, address, state_id, city_id) VALUES (:name, :address, )";
+            $stateId = $this->geStateId($data['state']);
+            echo $stateId;
+//            $cityId = $this->getCityId(array("state_id" => $stateId, "name" => $data['city']));
+//            try {
+//                $this->connection->beginTransaction();
+//                $sql = "INSERT INTO ".$this->table;
+//                $sql .= " (name, address, state_id, city_id) VALUES ";
+//                $sql .= "(".$data['name'].", ".$data['address'].", ".$stateId.", ".$cityId.")";
+//                $this->connection->exec($sql);
+//                $this->connection->commit();
+//            } catch (\Exception $ex) {
+//                $this->connection->rollBack();
+//                echo $ex->getMessage();
+//            }
 
     }
 
     private function getCityId(array $fields): int
     {
-        $cityService = new CityService();
-        $city = $cityService->getByField($fields);
-        if ($city)
-            return $city['id'];
-        $city = $cityService->create($fields);
-        return $city['id'];
+        try {
+            $cityService = new CityService();
+            $city = $cityService->getByField($fields);
+            if ($city)
+                return $city['id'];
+            $this->connection->beginTransaction();
+            $cityService->create($fields);
+            $this->connection->commit();
+            return $this->connection->lastInsertId();
+        } catch (\PDOException $ex) {
+            $this->connection->rollBack();
+            echo $ex->getMessage();
+        }
 
     }
 
-    private function geStateId(string $name)
+    private function geStateId(string $name): int
     {
-        $stateService = New StateService();
-        $state = $stateService->getByField('name', $name);
-        if ($state)
-            return $state['id'];
-        $state = $stateService->create(array("name", $name));
-        return $state['id'];
+        try {
+            $stateService = New StateService();
+            $state = $stateService->getByField(array('name' => $name));
+            if (!empty($state))
+                return $state['id'];
+            $this->connection->beginTransaction();
+            $stateService->create(array("name" => $name));
+            $this->connection->commit();
+            return $this->connection->lastInsertId();
+        } catch (\PDOException $ex) {
+            $this->connection->rollBack();
+            echo $ex->getMessage();
+        }
     }
 
     public function getOne(int $data)

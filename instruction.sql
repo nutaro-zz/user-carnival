@@ -23,4 +23,4 @@ CREATE table IF NOT EXISTS users(
     FOREIGN KEY (state_id) REFERENCES state(id),
     INDEX city_index (city_id),
     FOREIGN KEY (city_id) REFERENCES city(id)
-)  ENGINE=INNODB;
+)  ENGINE=INNODB;50

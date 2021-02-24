@@ -46,8 +46,8 @@ class UserController
         }
         $service = new UserService();
         $service->create($content);
-
-
+        $response->status(201);
+        $response->toJSON();
         return $response;
 
     }

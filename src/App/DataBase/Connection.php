@@ -9,21 +9,20 @@ class Connection
 {
     public static $instance;
 
-    public static function getInstance()
+    public static function getInstance(): ?PDO
     {
-        try {
-            if (!isset(self::$instance)) {
-                $dns = "mysql:host=";
-                $dns .= $_ENV['MYSQL_DB_HOST'].";";
-                $dns .= "port=".$_ENV['MYSQL_DB_PORT'].";";
-                $dns ."dbname=".$_ENV['MYSQL_DB_NAME'];
-                self::$instance = new PDO($dns, $_ENV['MYSQL_DB_USER'], $_ENV['MYSQL_DB_PASSWORD'], array(
-                    PDO::ATTR_PERSISTENT => true
-                ));
-            }
-        } catch (\PDOException $e) {
-            print($e->getMessage());
-        }
+        if (isset(self::$instance))
+            return self::$instance;
+        $host = getenv("MYSQL_DB_HOST");
+        $port = getenv("MYSQL_DB_PORT");
+        $database = getenv("MYSQL_DB_NAME");
+        $dsn = "mysql:host={$host};port={$port};dbname={$database}";
+        self::$instance = new PDO($dsn, getenv('MYSQL_DB_USER'), getenv('MYSQL_DB_PASSWORD'),
+            array(
+                PDO::ATTR_PERSISTENT => true
+            )
+        );
+        self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return self::$instance;
     }
 

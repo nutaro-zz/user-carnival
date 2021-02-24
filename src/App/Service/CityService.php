@@ -4,8 +4,9 @@
 namespace App\Service;
 
 
-class CityService extends Service implements \IService
+class CityService extends Service implements IService
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -24,12 +25,9 @@ class CityService extends Service implements \IService
 
     public function create(array $data)
     {
-        $sql = "INSERT INTO ".$this->table." (state_id, name) VALUES (:id, :name)";
-        $query = $this->connection->prepare($sql);
-        $query->bindParam(array('name'), $data['name']);
-        $query->bindParam(array('state_id'), $data['state_id']);
-        $query->execute();
-        return $query->fetch();
+        $sql = "INSERT INTO ".$this->table;
+        $sql .= " (name, state_id) VALUES (".$data['name'].", ".$data['state_id'].")";
+        $this->connection->exec($sql);
     }
 
     public function update(array $data)
