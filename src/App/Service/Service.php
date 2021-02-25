@@ -23,9 +23,7 @@ class Service implements IByField
             $sql .= $key."='{$value}' AND ";
         }
         $sql = rtrim($sql, " AND ");
-        $sql .= ";";
-        $query = $this->connection->prepare($sql);
-        $query->execute();
+        $query = $this->connection->query($sql);
         return $query->fetchAll();
     }
 }

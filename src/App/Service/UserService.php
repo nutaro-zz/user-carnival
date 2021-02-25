@@ -4,12 +4,14 @@
 namespace App\Service;
 
 use App\DataBase\Connection;
-use App\Service\CityService;
-use App\Service\StateService;
+use App\Repository\UserRepository;
+
 use App\Exceptions\ResourceAlreadyExistsException;
 use App\Exceptions\UnprocessableEntityException;
+use App\Exceptions\NotFoundException;
 
 use PDOException;
+use PDO;
 
 class UserService extends Service implements IService
 {
@@ -23,7 +25,7 @@ class UserService extends Service implements IService
     public function create(array $data)
     {
         try {
-            $stateId = $this->geStateId($data['state']);
+            $stateId = $this->getStateId($data['state']);
             $cityId = $this->getCityId(array("state_id" => $stateId, "name" => $data['city']));
             $sql = "INSERT INTO ".$this->table;
             $sql .= " (name, address, state_id, city_id) VALUES ";
@@ -55,7 +57,7 @@ class UserService extends Service implements IService
         }
     }
 
-    private function geStateId(string $name): int
+    private function getStateId(string $name): int
     {
         try {
             $stateService = New StateService();
@@ -71,9 +73,8 @@ class UserService extends Service implements IService
         }
     }
 
-    public function validateFields(array $data)
+    public function validateFields(array $data, array $required_fields)
     {
-        $required_fields = ["name", "address", "city", "state"];
         foreach ($required_fields as $field){
             if (!isset($data[$field])) {
                 $exception = new UnprocessableEntityException();
@@ -84,19 +85,22 @@ class UserService extends Service implements IService
 
     }
 
-    public function getOne(int $data)
-    {
-        // TODO: Implement getOne() method.
-    }
 
     public function getAll()
     {
-        // TODO: Implement getAll() method.
+        $repository = new UserRepository();
+        $sql = $repository->getAllUsers();
+        $data = $this->connection->query($sql);
+        return $data->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function update(array $data)
     {
-        // TODO: Implement update() method.
+        $id = $data['id'];
+        $user = $this->get($id);
+        $content = $data['content'];
+        $userRepository = new UserRepository();
+        $sql = $userRepository->updateUser($user, $content);
     }
 
     public function delete(int $id)
@@ -104,4 +108,29 @@ class UserService extends Service implements IService
         // TODO: Implement delete() method.
     }
 
+    public function get(int $id)
+    {
+        try {
+            $connection = Connection::getInstance();
+            $repository = new UserRepository();
+            $sql = $repository->getUserById($id);
+            $data = $connection->query($sql);
+            $content = $data->fetch(PDO::FETCH_ASSOC);
+            if (!isset($content))
+                throw new NotFoundException();
+        } catch (\PDOException $ex) {
+            throw $ex;
+        }
+        return $content;
+    }
+
+    public function getByName(string $name)
+    {
+        // TODO: Implement getByName() method.
+    }
+
+    public function getOrCreate(array $data): array
+    {
+        return [];
+    }
 }

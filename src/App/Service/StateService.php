@@ -13,9 +13,17 @@ class StateService extends Service implements IService
         $this->table = 'state';
     }
 
-    public function getOne(int $data)
+    public function create(array $data)
     {
+        $sql = "INSERT INTO ".$this->table." (name) VALUES (:name)";
+        $query = $this->connection->prepare($sql);
+        $query->bindParam('name', $data['name']);
+        $query->execute();
+    }
 
+    public function get(int $id)
+    {
+        // TODO: Implement get() method.
     }
 
     public function getAll()
@@ -23,12 +31,14 @@ class StateService extends Service implements IService
         // TODO: Implement getAll() method.
     }
 
-    public function create(array $data)
+    public function getOrCreate(array $data): array
     {
-        $sql = "INSERT INTO ".$this->table." (name) VALUES (:name)";
-        $query = $this->connection->prepare($sql);
-        $query->bindParam('name', $data['name']);
-        $query->execute();
+        $state = $this->getByField($data);
+        if (!isset($state) && !$state){
+            $this->create($data);
+            $state = $this->getByField($data);
+        }
+        return $state;
     }
 
     public function update(array $data)

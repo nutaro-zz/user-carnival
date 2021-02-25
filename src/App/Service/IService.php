@@ -3,8 +3,9 @@
 namespace App\Service;
 
 interface IService {
-    public function getOne(int $data);
+    public function get(int $id);
     public function getAll();
+    public function getOrCreate(array $data): array;
     public function create(array $data);
     public function update(array $data);
     public function delete(int $id);
