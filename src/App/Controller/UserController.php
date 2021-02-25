@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Exceptions\HttpExceptions;
 use App\Lib\Request;
 use App\Lib\Response;
 use App\DataBase\Connection;
@@ -35,19 +36,19 @@ class UserController
 
     public static function post(Request $request, Response $response): Response
     {
-        $fields = ["name", "address", "city", "state"];
-        $content = $request->getJSON();
-        foreach ($fields as $field){
-            if (!isset($content[$field])) {
-                $response->status(422);
-                $response->toJSON(array("Mandatory" => $fields));
-                return $response;
-            }
+
+        try {
+            $body = $request->getJSON();
+            $service = new UserService();
+            $service->validateFields($body);
+            $service->create($body);
+            $response->status(201);
+            $response->toJSON();
+        } catch (HttpExceptions $ex){
+            $response->status($ex->getStatusCode());
+            $response->toJSON($ex->getMessage());
         }
-        $service = new UserService();
-        $service->create($content);
-        $response->status(201);
-        $response->toJSON();
+
         return $response;
 
     }

@@ -2,6 +2,10 @@
 build:
 	docker-compose build
 
+.PHONY:build-hard
+build-hard:
+	docker-compose build --no-cache
+
 .PHONY:up
 up:
 	docker-compose up -d

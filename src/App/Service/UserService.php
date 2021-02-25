@@ -6,6 +6,10 @@ namespace App\Service;
 use App\DataBase\Connection;
 use App\Service\CityService;
 use App\Service\StateService;
+use App\Exceptions\ResourceAlreadyExistsException;
+use App\Exceptions\UnprocessableEntityException;
+
+use PDOException;
 
 class UserService extends Service implements IService
 {
@@ -19,17 +23,18 @@ class UserService extends Service implements IService
     public function create(array $data)
     {
         try {
-            $this->connection->beginTransaction();
             $stateId = $this->geStateId($data['state']);
             $cityId = $this->getCityId(array("state_id" => $stateId, "name" => $data['city']));
             $sql = "INSERT INTO ".$this->table;
             $sql .= " (name, address, state_id, city_id) VALUES ";
             $sql .= "('".$data['name']."', '".$data['address']."', ".$stateId.", ".$cityId.")";
+            $this->connection->beginTransaction();
             $this->connection->exec($sql);
             $this->connection->commit();
-        } catch (\PDOException $ex) {
+        } catch (PDOException $ex) {
             $this->connection->rollBack();
-            echo $ex->getMessage();
+            if ($ex->getCode() == "23000")
+                throw new ResourceAlreadyExistsException();
         }
 
     }
@@ -64,6 +69,19 @@ class UserService extends Service implements IService
             $this->connection->rollBack();
             echo $ex->getMessage();
         }
+    }
+
+    public function validateFields(array $data)
+    {
+        $required_fields = ["name", "address", "city", "state"];
+        foreach ($required_fields as $field){
+            if (!isset($data[$field])) {
+                $exception = new UnprocessableEntityException();
+                $exception->setMessage(array("Mandatory" => $required_fields));
+                throw $exception;
+            }
+        }
+
     }
 
     public function getOne(int $data)

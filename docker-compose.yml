@@ -16,6 +16,8 @@ services:
       - .:/var/www/
       - ./src/html:/var/www/html
       - ./apache2.conf:/etc/apache2/sites-enabled/users.conf
+    depends_on:
+      - mysql
 
   mysql:
     container_name: database

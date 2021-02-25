@@ -24,3 +24,5 @@ CREATE table IF NOT EXISTS users(
     INDEX city_index (city_id),
     FOREIGN KEY (city_id) REFERENCES city(id)
 )  ENGINE=INNODB;
+
+ALTER table users ADD UNIQUE unique_index (`name`, `address`, `state_id`, `city_id`);
