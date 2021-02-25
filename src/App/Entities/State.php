@@ -5,18 +5,15 @@ namespace App\Entities;
 
 
 use App\DataBase\Connection;
-use App\Service\IRegister;
 
 
-class State implements IRegister
+class State extends Entity implements IRegister
 {
-    private string $table;
+
+    protected static string $table = 'state';
     private int $id;
     private string $name;
 
-    public function __construct(){
-        $this->table = 'address';
-    }
 
     public function getId(): int
     {
@@ -29,7 +26,7 @@ class State implements IRegister
     }
 
 
-    public function setName(string $name): State
+    public function setName(string $name): void
     {
         $name = filter_input(INPUT_POST, $name, FILTER_SANITIZE_SPECIAL_CHARS);
         $this->name = trim($name);
@@ -39,7 +36,7 @@ class State implements IRegister
     public function add(): void
     {
         $connection = Connection::getInstance();
-        $connection->exec("INSERT INTO state (name) VALUES (\"{$this->name}\")");
+        $connection->exec("INSERT INTO state (name) VALUES ('{$this->name}')");
         $this->id = $connection->lastInsertId();
     }
 
@@ -48,17 +45,18 @@ class State implements IRegister
         if (!isset($this->id))
             return;
         $connection = Connection::getInstance();
-        $connection->exec("UPDATE state SET name = \"{$this->name}\" WHERE id=\"{$this->id}\"");
+        $connection->exec("UPDATE state SET name = '{$this->name}' WHERE id='{$this->id}'");
     }
 
     public function delete(): void
     {
         $connection = Connection::getInstance();
-        $connection->exec("DELETE FROM state WHERE id=\"$this->id\"");
+        $connection->exec("DELETE FROM state WHERE id='$this->id'");
     }
 
-    public static function getByField(array $values)
+    public function build(array $data)
     {
-        // TODO: Implement getByField() method.
+        $this->id = $data['id'];
+        $this->setName($data['name']);
     }
 }

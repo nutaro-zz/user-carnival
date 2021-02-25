@@ -4,10 +4,10 @@
 namespace App\Entities;
 
 
-class Address implements IRegister
+class Address extends Entity implements IRegister
 {
 
-    private static string $table = 'address';
+    protected static string $table = 'address';
     public int $id;
     private string $street;
     private string $complement;
@@ -39,23 +39,6 @@ class Address implements IRegister
     {
         $street = filter_input(INPUT_POST, $street, FILTER_SANITIZE_SPECIAL_CHARS);
         $this->street = $street;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComplement(): string
-    {
-        return $this->complement;
-    }
-
-    /**
-     * @param string $complement
-     */
-    public function setComplement(string $complement): void
-    {
-        $complement = filter_input(INPUT_POST, $complement, FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->complement = $complement;
     }
 
     /**
@@ -123,11 +106,13 @@ class Address implements IRegister
 
     public function delete(): void
     {
-       return;
+        return;
     }
 
-    public static function getByField(array $values)
+    public function build(array $data)
     {
-        // TODO: Implement getByField() method.
+        $this->id = data['id'];
+        $this->setStreet($data['street']);
+        $this->setNumber($data['number']);
     }
 }

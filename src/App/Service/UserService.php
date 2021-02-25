@@ -12,12 +12,13 @@ use App\Entities\Address;
 class UserService extends Service implements IService
 {
 
+    protected static string $table;
+
     private User $entity;
 
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'user';
     }
 
     /**
@@ -42,12 +43,10 @@ class UserService extends Service implements IService
             $this->connection->beginTransaction();
             $state = StateService::getOrCreateState(array("name" => $data['state']));
             $city = CityService::getOrCreateCity(array("name" => $data['city']), $state);
-
             $body = array('street' => $data['street'],
-                          'complement' => $data['complement'],
                           'state_id' => $state->getId(),
                           'city_id' => $city->getId());
-            $address = AddressService::getOrCreateAddress($body);
+            $address = AddressService::getOrCreateAddress($body, $state, $city);
             $user = $this->entity;
             $user->setName($data["name"]);
             $user->setAddress($address);
@@ -59,19 +58,13 @@ class UserService extends Service implements IService
 }
 
 
-
-
-
-
-
-    public function getOne(int $data)
-    {
-        // TODO: Implement getOne() method.
-    }
-
-
-    public function getById()
+    public function getById(int $name)
     {
         // TODO: Implement getById() method.
+    }
+
+    public function getByName(string $name)
+    {
+        // TODO: Implement getByName() method.
     }
 }

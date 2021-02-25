@@ -4,19 +4,17 @@
 namespace App\Entities;
 
 
-use App\Service\IRegister;
+use App\DataBase\Connection;
 
-class City implements IRegister
+
+class City extends Entity implements IRegister
 {
-    private string $table;
+
+    protected static string $table = 'city';
+
     private int $id;
     private string $name;
     private State $state;
-
-    public function __construct(){
-        $this->table = 'city';
-    }
-
 
     public function getId(): int
     {
@@ -48,7 +46,8 @@ class City implements IRegister
     public function add(): void
     {
         $connection = Connection::getInstance();
-        $connection->exec("INSERT INTO state (name, state_id) VALUES (\"{$this->name}\", \"{$this->getState()->getId()}\")");
+        $connection->exec("INSERT INTO state (name, state_id) VALUES ('{$this->name}', '{$this->getState()->getId()}')");
+        $this->id = $connection->lastInsertId();
     }
 
     public function update(): void
@@ -65,8 +64,13 @@ class City implements IRegister
         $connection->exec("DELETE FROM state WHERE id=\"$this->id\"");
     }
 
-    public static function getByField(array $values)
+    public function build(array $data)
     {
-        // TODO: Implement getByField() method.
+        $this->id = $data['id'];
+        $this->setName($data['name']);
+        $stateData = State::getByField(array("id" => $data['state_id']), 'state');
+        $state = new State();
+        $state->build($stateData);
+        $this->setState($state);
     }
 }

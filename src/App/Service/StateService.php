@@ -10,35 +10,44 @@ use App\Entities\State;
 class StateService extends Service implements IService
 {
 
+    protected static string $table = 'state';
+
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'state';
     }
 
-    public static function getOrCreateState(array $data): State
+    public static function getOrCreateState(array $data)
     {
         try {
-            $state = State::getByField($data);
-            if (!empty($state))
-                return $state;
             $state = new State();
-            $state->setName($data["name"]);
-            $state->add();
+            $stateData = State::getByField($data, self::$table);
+            if (empty($stateData) && !$stateData) {
+                $state->setName($data["name"]);
+                $state->add();
+                return $state;
+            }
+            $state->build($stateData);
             return $state;
         } catch (\PDOException $ex) {
             echo $ex->getMessage();
         }
     }
 
+//    public static function(data?)
+
     public function create(array $data)
     {
         // TODO: Implement create() method.
     }
 
-    public function getById()
+    public function getById(int $id)
     {
         // TODO: Implement getById() method.
     }
 
+    public function getByName(string $name)
+    {
+        // TODO: Implement getByName() method.
+    }
 }

@@ -11,19 +11,22 @@ use App\Entities\State;
 class CityService extends Service implements IService
 {
 
+    protected static string $table = 'city';
+
     public function __construct()
     {
         parent::__construct();
-        $this->table = 'city';
     }
 
-    public static function getOrCreateCity(array $data, State $state): City
+    public static function getOrCreateCity(array $data, State $state)
     {
         try {
-            $city = City::getByField(array("state_id" => $state->getId(), "name" => $data['name']));
-            if (!empty($city))
-                return $city;
+            $cityData = City::getByField(array("state_id" => $state->getId(), "name" => $data['name']), self::$table);
             $city = new City();
+            if (empty($cityData) && $cityData) {
+                $city->build($cityData);
+                return $city;
+            }
             $city->setState($state);
             $city->setName($data['name']);
             $city->add();
@@ -33,13 +36,20 @@ class CityService extends Service implements IService
         }
     }
 
+
     public function create(array $data)
     {
         // TODO: Implement create() method.
     }
 
-    public function getById()
+
+    public function getById(int $id)
     {
         // TODO: Implement getById() method.
+    }
+
+    public function getByName(string $name)
+    {
+        // TODO: Implement getByName() method.
     }
 }

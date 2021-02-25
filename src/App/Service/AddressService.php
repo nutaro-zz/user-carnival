@@ -8,28 +8,20 @@ use App\Entities\State;
 
 class AddressService implements IService
 {
+    public static string $table = 'address';
 
-    public function create(array $data)
-    {
-        // TODO: Implement create() method.
-    }
-
-    public function getById()
-    {
-        // TODO: Implement getByID() method.
-    }
-
-
-    public static function getOrCreateAddress(array $data, State $state,City $city): Address
+    public static function getOrCreateAddress(array $data, State $state, City $city): Address
     {
         try {
-            $address = Address::getByField($data);
-            if (!empty($address))
-                return $address;
+            var_dump($data);
             $address = new Address();
             $address->setState($state);
             $address->setCity($city);
-            $address->setComplement($data['complement']);
+            $addressData = Address::getByField($data);
+            if (!empty($addressData) && $addressData){
+                $address->build($addressData);
+                return $address;
+            }
             $address->setStreet($data['street']);
             $address->setNumber($data['number']);
             $address->add();
@@ -40,4 +32,18 @@ class AddressService implements IService
 
     }
 
+    public function create(array $data)
+    {
+        // TODO: Implement create() method.
+    }
+
+    public function getById(int $id)
+    {
+        // TODO: Implement getById() method.
+    }
+
+    public function getByName(string $name)
+    {
+        // TODO: Implement getByName() method.
+    }
 }

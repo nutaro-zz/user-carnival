@@ -6,26 +6,14 @@ namespace App\Service;
 
 use App\DataBase\Connection;
 
-class Service implements IByField
+class Service
 {
-    protected $connection;
-    protected $table;
+    protected \PDO $connection;
+    protected static string $table;
 
     public function __construct()
     {
         $this->connection = Connection::getInstance();
     }
 
-    public function getByField(array $values)
-    {
-        $sql = "SELECT * FROM ".$this->table." WHERE ";
-        foreach ($values as $key  => $value){
-            $sql .= $key."='{$value}' AND ";
-        }
-        $sql = rtrim($sql, " AND ");
-        $sql .= ";";
-        $query = $this->connection->prepare($sql);
-        $query->execute();
-        return $query->fetchAll();
-    }
 }

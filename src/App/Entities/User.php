@@ -76,4 +76,9 @@ class User implements IRegister
     {
         // TODO: Implement getByField() method.
     }
+
+    public function build(array $data)
+    {
+        // TODO: Implement build() method.
+    }
 }
