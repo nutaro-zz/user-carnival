@@ -6,8 +6,6 @@ namespace App\Repository;
 
 use App\Service\CityService;
 use App\Service\StateService;
-use App\Service\UserService;
-use function App\Service\get;
 
 class UserRepository
 {
@@ -66,16 +64,13 @@ class UserRepository
         $stateService = new StateService();
         $state = $stateService->getByField(array("name" => $content['state']));
         unset($content['state']);
-        $sql .= $this->updateCityId($content, $state['id'], )
+        $sql .= $this->updateCityId($content, $state['id'], );
         unset($content['city']);
         foreach ($content as $key => $value) {
             if ($user[$key] != $value)
                 $sql .= "{$key} = '{$value}', ";
         }
 
-        if ($user['city'] != $city['name'] && $user['state'] != $state['name']) {
-            $sql .= "city_id = '{$city['id']}', ";
-        }
         $sql .= " WHERE id={$user['id']}";
         return $sql;
     }

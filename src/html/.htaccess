@@ -1,0 +1,12 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+SetEnv MYSQL_DB_NAME "UsersDB"
+SetEnv MYSQL_DB_HOST "172.16.239.11"
+SetEnv MYSQL_DB_PORT "3306"
+SetEnv MYSQL_DB_USER="root"
+SetEnv MYSQL_DB_PASSWORD="secret"
