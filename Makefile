@@ -9,6 +9,7 @@ build-hard:
 .PHONY:up
 up:
 	docker-compose up -d
+	docker exec -i php bash -c "service apache2 reload"
 
 .PHONY:down
 down:

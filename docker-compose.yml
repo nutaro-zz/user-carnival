@@ -7,15 +7,14 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./apache.env
-    working_dir: /var/www
-    command: "bash -c 'composer install && service apache2 restart && tail -f /dev/null'"
+    working_dir: /opt/UserApi/
+    command: "bash -c 'service apache2 restart && tail -f /dev/null'"
     networks:
       usersapi:
         ipv4_address: 172.16.239.10
     volumes:
-      - .:/var/www/
-      - ./src/html:/var/www/html
-      - ./apache2.conf:/etc/apache2/sites-enabled/users.conf
+      - .:/opt/UserApi/
+      - ./apache2.conf:/etc/apache2/sites-available/default.conf
     depends_on:
       - mysql
 
