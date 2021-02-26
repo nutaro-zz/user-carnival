@@ -22,11 +22,14 @@ class Entity implements IBuild
 
         $sql = "SELECT * FROM ".$this->table." WHERE ";
         foreach ($values as $key  => $value){
-            $sql .= $key."='{$value}' AND ";
+            if (gettype($value) == "integer"){
+                $sql .= $key."={$value} AND ";
+            } else {
+                $sql .= $key."='{$value}' AND ";
+            }
         }
         $sql = rtrim($sql, " AND ");
         $query = $connection->prepare($sql);
-        var_dump($sql);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }

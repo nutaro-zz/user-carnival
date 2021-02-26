@@ -3,16 +3,26 @@
 
 namespace App\Entities;
 
+use App\DataBase\Connection;
+
 
 class Address extends Entity implements IRegister
 {
 
-    protected string $table = 'address';
     public int $id;
     private string $street;
     private int $number;
     private State $state;
     private City $city;
+
+    /**
+     * Address constructor.
+     */
+    public function __construct()
+    {
+        $this->table = 'address';
+    }
+
 
     /**
      * @return int
@@ -36,7 +46,7 @@ class Address extends Entity implements IRegister
      */
     public function setStreet(string $street): void
     {
-        $street = filter_input(INPUT_POST, $street, FILTER_SANITIZE_SPECIAL_CHARS);
+        $street = filter_var($street, FILTER_SANITIZE_STRING);
         $this->street = $street;
     }
 
@@ -94,7 +104,7 @@ class Address extends Entity implements IRegister
         $sql = "INSERT INTO {$this->table} (street, number, state_id, city_id)";
         $sql .= " VALUES ('{$this->street}', '{$this->number}'";
         $sql .= ", '{$this->getState()->getId()}', '{$this->getCity()->getId()}')";
-        $connection->exec(sql);
+        $connection->exec($sql);
         $this->id = $connection->lastInsertId();
     }
 

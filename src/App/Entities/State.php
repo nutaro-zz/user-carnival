@@ -31,7 +31,7 @@ class State extends Entity implements IRegister
 
     public function setName(string $name): void
     {
-        $name = filter_input(INPUT_POST, $name, FILTER_SANITIZE_SPECIAL_CHARS);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
         $this->name = trim($name);
     }
 

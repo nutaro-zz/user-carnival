@@ -3,11 +3,11 @@
 
 namespace App\Service;
 
-use App\Entities\City;
-use App\Entities\State;
 use App\Entities\User;
 use App\Entities\Address;
+use App\Repository\UserRepository;
 
+use PDO;
 
 class UserService extends Service implements IService
 {
@@ -43,7 +43,6 @@ class UserService extends Service implements IService
             $this->connection->beginTransaction();
             $state = (new StateService())->getOrCreateState(array("name" => $data['state']));
             $city = (new CityService())->getOrCreateCity(array("name" => $data['city']), $state);
-            var_dump($city);
             $address = new Address();
             $address->setState($state);
             $address->setCity($city);
@@ -55,15 +54,18 @@ class UserService extends Service implements IService
             $user->setAddress($address);
             $user->add();
             $this->connection->commit();
-        } catch (\PDOException $ex) {
+        } catch (\PDOException | \Exception $ex) {
             echo $ex->getMessage();
         }
-}
+    }
 
 
-    public function getById(int $name)
+    public function get(int $id)
     {
-        // TODO: Implement getById() method.
+        $repository = new UserRepository();
+        $sql = $repository->getUserById($id);
+        $query = $this->connection->query($sql);
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getByName(string $name)

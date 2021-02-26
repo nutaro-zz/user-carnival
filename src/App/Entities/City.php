@@ -30,7 +30,7 @@ class City extends Entity implements IRegister
 
     public function setName(string $name): void
     {
-        $name = filter_input(INPUT_POST, $name, FILTER_SANITIZE_SPECIAL_CHARS);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
         $this->name = trim($name);
     }
 
@@ -48,7 +48,7 @@ class City extends Entity implements IRegister
     public function add(): void
     {
         $connection = Connection::getInstance();
-        $connection->exec("INSERT INTO state (name, state_id) VALUES ('{$this->name}', '{$this->getState()->getId()}')");
+        $connection->exec("INSERT INTO {$this->table} (name, state_id) VALUES ('{$this->name}', {$this->getState()->getId()})");
         $this->id = $connection->lastInsertId();
     }
 
@@ -57,13 +57,13 @@ class City extends Entity implements IRegister
         if (!isset($this->id))
             return;
         $connection = Connection::getInstance();
-        $connection->exec("UPDATE state SET name = \"{$this->name}\" WHERE id=\"{$this->id}\"");
+        $connection->exec("UPDATE {$this->table} SET name = \"{$this->name}\" WHERE id=\"{$this->id}\"");
     }
 
     public function delete(): void
     {
         $connection = Connection::getInstance();
-        $connection->exec("DELETE FROM state WHERE id=\"$this->id\"");
+        $connection->exec("DELETE FROM {$this->table} WHERE id=\"$this->id\"");
     }
 
     public function build(array $data)

@@ -16,7 +16,7 @@ class AddressService implements IService
             $values = array("street" => $address->getStreet(), 'number' => $address->getNumber(),
                             "state_id" => $address->getState()->getId(), 'city_id' => $address->getCity()->getId());
             $addressData = $address->getByField($values);
-            if (!empty($addressData) && $addressData){
+            if ($addressData){
                 $address->build($addressData);
                 return $address;
             }

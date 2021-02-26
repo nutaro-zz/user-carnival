@@ -26,11 +26,14 @@ class UserController
 
     public static function get(Request $request, Response $response): Response
     {
-
-        $connection = Connection::getInstance();
-        $data = $connection->query("SELECT * from users");
-        $response->status(200);
-        $response->toJSON($data->fetchAll());
+        try {
+            $userService = new UserService();
+            $response->status(200);
+            $response->toJSON($userService->get((int) $request->params[0]));
+        } catch (\Exception $ex) {
+            $response->status(500);
+            $response->toJSON($ex->getMessage());
+        }
         return $response;
     }
 
