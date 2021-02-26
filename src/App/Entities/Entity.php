@@ -9,18 +9,24 @@ use PDO;
 
 class Entity implements IBuild
 {
-    protected static string $table = '';
+    protected string $table;
 
-    public static function getByField(array $values, string $table)
+    public function __construct()
+    {
+        $this->table = '';
+    }
+
+    public function getByField(array $values)
     {
         $connection = Connection::getInstance();
 
-        $sql = "SELECT * FROM {$table} WHERE ";
+        $sql = "SELECT * FROM ".$this->table." WHERE ";
         foreach ($values as $key  => $value){
             $sql .= $key."='{$value}' AND ";
         }
         $sql = rtrim($sql, " AND ");
         $query = $connection->prepare($sql);
+        var_dump($sql);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }

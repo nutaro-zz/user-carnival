@@ -41,12 +41,15 @@ class UserService extends Service implements IService
     {
         try {
             $this->connection->beginTransaction();
-            $state = StateService::getOrCreateState(array("name" => $data['state']));
-            $city = CityService::getOrCreateCity(array("name" => $data['city']), $state);
-            $body = array('street' => $data['street'],
-                          'state_id' => $state->getId(),
-                          'city_id' => $city->getId());
-            $address = AddressService::getOrCreateAddress($body, $state, $city);
+            $state = (new StateService())->getOrCreateState(array("name" => $data['state']));
+            $city = (new CityService())->getOrCreateCity(array("name" => $data['city']), $state);
+            var_dump($city);
+            $address = new Address();
+            $address->setState($state);
+            $address->setCity($city);
+            $address->setStreet($data['street']);
+            $address->setNumber($data['number']);
+            $address = (new AddressService())->getOrCreateAddress($address);
             $user = $this->entity;
             $user->setName($data["name"]);
             $user->setAddress($address);

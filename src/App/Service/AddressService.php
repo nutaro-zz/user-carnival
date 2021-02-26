@@ -8,22 +8,18 @@ use App\Entities\State;
 
 class AddressService implements IService
 {
-    public static string $table = 'address';
+    public string $table = 'address';
 
-    public static function getOrCreateAddress(array $data, State $state, City $city): Address
+    public function getOrCreateAddress(Address $address): Address
     {
         try {
-            var_dump($data);
-            $address = new Address();
-            $address->setState($state);
-            $address->setCity($city);
-            $addressData = Address::getByField($data);
+            $values = array("street" => $address->getStreet(), 'number' => $address->getNumber(),
+                            "state_id" => $address->getState()->getId(), 'city_id' => $address->getCity()->getId());
+            $addressData = $address->getByField($values);
             if (!empty($addressData) && $addressData){
                 $address->build($addressData);
                 return $address;
             }
-            $address->setStreet($data['street']);
-            $address->setNumber($data['number']);
             $address->add();
             return $address;
         } catch (\PDOException $ex) {

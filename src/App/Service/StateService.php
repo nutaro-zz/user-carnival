@@ -21,8 +21,8 @@ class StateService extends Service implements IService
     {
         try {
             $state = new State();
-            $stateData = State::getByField($data, self::$table);
-            if (empty($stateData) && !$stateData) {
+            $stateData = $state->getByField($data);
+            if (!$stateData || empty($stateData)) {
                 $state->setName($data["name"]);
                 $state->add();
                 return $state;

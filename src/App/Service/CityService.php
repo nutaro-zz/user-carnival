@@ -21,14 +21,14 @@ class CityService extends Service implements IService
     public static function getOrCreateCity(array $data, State $state)
     {
         try {
-            $cityData = City::getByField(array("state_id" => $state->getId(), "name" => $data['name']), self::$table);
             $city = new City();
-            if (empty($cityData) && $cityData) {
+            $city->setState($state);
+            $city->setName($data['name']);
+            $cityData = $city->getByField(array("state_id" => $state->getId(), "name" => $data['name']));
+            if ($cityData) {
                 $city->build($cityData);
                 return $city;
             }
-            $city->setState($state);
-            $city->setName($data['name']);
             $city->add();
             return $city;
         } catch (\PDOException $ex) {

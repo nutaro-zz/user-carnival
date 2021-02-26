@@ -6,11 +6,16 @@ namespace App\Entities;
 
 use App\DataBase\Connection;
 
-class User implements IRegister
+class User extends Entity implements IRegister
 {
     protected int $id;
     protected string $name;
     protected Address $address;
+
+    public function __construct()
+    {
+        $this->table = 'users';
+    }
 
     /**
      * @return int
@@ -56,7 +61,7 @@ class User implements IRegister
     public function add(): void
     {
         $connection = Connection::getInstance();
-        $sql = "INSERT INTO user (name, address_id) ";
+        $sql = "INSERT INTO {$this->table} (name, address_id) ";
         $sql .= "VALUES ('{$this->name}', '{$this->getAddress()->getId()}')";
         $connection->exec($sql);
         $this->id = $connection->lastInsertId();
@@ -70,11 +75,6 @@ class User implements IRegister
     public function delete(): void
     {
         // TODO: Implement delete() method.
-    }
-
-    public static function getByField(array $values)
-    {
-        // TODO: Implement getByField() method.
     }
 
     public function build(array $data)

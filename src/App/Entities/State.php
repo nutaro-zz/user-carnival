@@ -10,10 +10,13 @@ use App\DataBase\Connection;
 class State extends Entity implements IRegister
 {
 
-    protected static string $table = 'state';
     private int $id;
     private string $name;
 
+    public function __construct()
+    {
+        $this->table = 'state';
+    }
 
     public function getId(): int
     {

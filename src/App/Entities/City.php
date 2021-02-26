@@ -9,12 +9,14 @@ use App\DataBase\Connection;
 
 class City extends Entity implements IRegister
 {
-
-    protected static string $table = 'city';
-
     private int $id;
     private string $name;
     private State $state;
+
+    public function __construct()
+    {
+        $this->table = 'city';
+    }
 
     public function getId(): int
     {
@@ -68,9 +70,5 @@ class City extends Entity implements IRegister
     {
         $this->id = $data['id'];
         $this->setName($data['name']);
-        $stateData = State::getByField(array("id" => $data['state_id']), 'state');
-        $state = new State();
-        $state->build($stateData);
-        $this->setState($state);
     }
 }

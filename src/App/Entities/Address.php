@@ -7,10 +7,9 @@ namespace App\Entities;
 class Address extends Entity implements IRegister
 {
 
-    protected static string $table = 'address';
+    protected string $table = 'address';
     public int $id;
     private string $street;
-    private string $complement;
     private int $number;
     private State $state;
     private City $city;
@@ -92,8 +91,8 @@ class Address extends Entity implements IRegister
     public function add(): void
     {
         $connection = Connection::getInstance();
-        $sql = "INSERT INTO {self::table} (street, number, complement, state_id, city_id)";
-        $sql .= " VALUES ('{$this->street}', '{$this->number}', '{$this->complement}'";
+        $sql = "INSERT INTO {$this->table} (street, number, state_id, city_id)";
+        $sql .= " VALUES ('{$this->street}', '{$this->number}'";
         $sql .= ", '{$this->getState()->getId()}', '{$this->getCity()->getId()}')";
         $connection->exec(sql);
         $this->id = $connection->lastInsertId();
@@ -101,12 +100,18 @@ class Address extends Entity implements IRegister
 
     public function update(): void
     {
-        return;
+        $connection = Connection::getInstance();
+        $sql = "UPDATE {$this->table} SET street='{$this->getStreet()}', ";
+        $sql .= "number='{$this->getNumber()}', state_id='{$this->getState()->getId()}', ";
+        $sql .= "city_id='{$this->getCity()->getId()}'";
+        $connection->exec(sql);
     }
 
     public function delete(): void
     {
-        return;
+        $connection = Connection::getInstance();
+        $sql = "DELETE FROM {self::table} WHERE id={$this->getId()}";
+        $connection->exec(sql);
     }
 
     public function build(array $data)
