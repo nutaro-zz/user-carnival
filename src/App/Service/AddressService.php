@@ -42,4 +42,9 @@ class AddressService implements IService
     {
         // TODO: Implement getByName() method.
     }
+
+    public function get(int $id)
+    {
+        // TODO: Implement get() method.
+    }
 }

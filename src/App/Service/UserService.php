@@ -39,6 +39,7 @@ class UserService extends Service implements IService
 
     public function create(array $data)
     {
+        var_dump($data);
         try {
             $this->connection->beginTransaction();
             $state = (new StateService())->getOrCreateState(array("name" => $data['state']));
