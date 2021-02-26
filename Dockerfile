@@ -7,4 +7,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN chmod +x /usr/local/bin/composer
 RUN docker-php-ext-install pdo pdo_mysql
 RUN phpenmod pdo_mysql
+RUN chgrp -R www-data /var/www/html/App/
+RUN chmod -R 775 /var/www/html/App/storage
 RUN a2enmod rewrite
+
